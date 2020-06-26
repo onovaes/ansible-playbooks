@@ -48,6 +48,11 @@
         regexp: '^#?PermitRootLogin'
         line: 'PermitRootLogin no'
 
+    - name: Restart sshd
+      service:
+        name: 'sshd'
+        state: 'restarted'
+
 # Install Packages
     - name: Update apt
       apt: update_cache=yes
