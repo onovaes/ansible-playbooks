@@ -8,16 +8,16 @@
     - vars/default.yml
 
   tasks:
-    - name: Install Prerequisites
+    - name: Instala os pré-requisitos
       apt: name=aptitude update_cache=yes state=latest force_apt_get=yes
 
 # Sudo Group Setup
-    - name: Make sure we have a 'wheel' group
+    - name: Garante que temos um grupo 'wheel'
       group:
         name: wheel
         state: present
 
-    - name: Allow 'wheel' group to have passwordless sudo
+    - name: Usuários do grupo wheel poderá usar sudo sem senha 
       lineinfile:
         path: /etc/sudoers
         state: present
@@ -26,7 +26,7 @@
         validate: '/usr/sbin/visudo -cf %s'
 
 # User + Key Setup
-    - name: Create a new regular user with sudo privileges
+    - name: Cria um usuário com privilégio de root 
       user:
         name: "{{ create_user }}"
         state: present
@@ -35,20 +35,20 @@
         create_home: true
         shell: /bin/bash
 
-    - name: Set authorized key for remote user
+    - name: Copia a minha chave publica para o usuário
       authorized_key:
         user: "{{ create_user }}"
         state: present
         key: "{{ copy_local_key }}"
 
-    - name: Disable password authentication for root
+    - name: Desabilita a autentição no ssh pelo usuário root
       lineinfile:
         path: /etc/ssh/sshd_config
         state: present
         regexp: '^#?PermitRootLogin'
         line: 'PermitRootLogin no'
 
-    - name: Restart sshd
+    - name: Restart do sshd
       service:
         name: 'sshd'
         state: 'restarted'

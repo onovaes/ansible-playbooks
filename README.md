@@ -11,9 +11,9 @@ TODO LIST
 [ubuntu_initial_setup] - Faz as configurações iniciais no ubuntu. Testado no Ubuntu 20.04 LTS
 
 - Atualiza os pacotes
-- Desabilita o login em ssh com root 
-- Adiciona o meu usuário ao grupo whell
-- Adiciona a minha chave ssh ao usuário criado anteriormente
+- Desabilita o login em ssh com o usuário root 
+- Adiciona o meu usuário ao grupo whell (Super Usuário)
+- Adiciona a minha chave publica ssh ao usuário criado no passo anterior
 - Instala alguns pacotes como   'curl', 'vim', 'git', 'ufw','fail2ban'
 
 ## 1 - Clonando o repo e entrando na pasta
