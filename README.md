@@ -4,6 +4,7 @@ Acreditamos que já tenha o ansible instalado na sua maquina.
 
 TODO LIST
 - Setar hostame
+- Acredito que não estava fazendo o upgrade inicial automatico
 
 ### Ubuntu setup inicial
 
