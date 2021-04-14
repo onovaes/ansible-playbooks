@@ -1,18 +1,19 @@
 # Meus Playbooks
 
-Acreditamos que já tenha o ansible instalado na sua maquina. 
+Acreditamos que já tenha o ansible instalado na sua maquina.
 
 TODO LIST
-- Setar hostame
+- Tirar inventario do playbook, pois devo passar como parametro no docker
+- validando instlaco do dockers
 - Acredito que não estava fazendo o upgrade inicial automatico
 
 ### Ubuntu setup inicial
 
-[ubuntu_initial_setup] - Faz as configurações iniciais no ubuntu. Testado no Ubuntu 20.04 LTS
+[initial_setup_ubuntu2004] - Faz as configurações iniciais no ubuntu. Testado no Ubuntu 20.04 LTS
 
 - Atualiza os pacotes
 - Desabilita o login em ssh com o usuário root 
-- Adiciona o meu usuário ao grupo whell (Super Usuário)
+- Cria e Adiciona o meu usuário ao grupo whell (Super Usuário)
 - Adiciona a minha chave publica ssh ao usuário criado no passo anterior
 - Instala alguns pacotes como   'curl', 'vim', 'git', 'ufw','fail2ban'
 
@@ -23,9 +24,13 @@ cd ansible-playbooks
 ## 2 - Editar arquivo de configuração 
 $vim ubuntu_initial_setup/vars/default.yml
 
-## Executar playbook
+## 3 - Executar playbook
 
 Executaremos como root na primeira vez.
 
-$ansible-playbook -u root ubuntu_initial_setup/playbook.yml 
+$ansible-playbook -u root initial_setup_ubuntu2004/playbook.yml 
+
+
+Leituras importantes-
+    https://docs.docker.com/engine/install/linux-postinstall/
 
