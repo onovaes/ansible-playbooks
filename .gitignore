@@ -4,6 +4,7 @@ bin/
 .DS_Store
 .DS_Store?
 ._*
+*.retry
 .Spotlight-V100
 .Trashes
 Icon?
