@@ -18,17 +18,19 @@ TODO LIST
 - Instala alguns pacotes como   'curl', 'vim', 'git', 'ufw','fail2ban'
 
 ## 1 - Clonando o repo e entrando na pasta
-$git clone git@github.com:onovaes/ansible-playbooks.git
-cd ansible-playbooks
+    
+    $git clone git@github.com:onovaes/ansible-playbooks.git
+    cd ansible-playbooks
 
 ## 2 - Editar arquivo de configuração 
-$vim ubuntu_initial_setup/vars/default.yml
+    
+    $nano initial_setup_ubuntu2004/vars/default.yml
 
 ## 3 - Executar playbook
 
 Executaremos como root na primeira vez.
 
-$ansible-playbook -u root initial_setup_ubuntu2004/playbook.yml 
+    $ansible-playbook -u root initial_setup_ubuntu2004/playbook.yml 
 
 
 Leituras importantes-
