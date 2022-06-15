@@ -24,6 +24,7 @@
         name: "{{ created_username }}"
         state: present
         groups: sudo
+        shell: /bin/bash
         append: true
         create_home: true 
 
@@ -41,7 +42,7 @@
         regexp: '^#?PasswordAuthentication'
         line: 'PasswordAuthentication no'
 
-    - name: Disable password authentication for root
+    - name: Disable password authentication for root on ssh
       lineinfile:
         path: /etc/ssh/sshd_config
         state: present
@@ -60,7 +61,7 @@
           - vim
           - git
           - ufw
-          - fail2ban
+          #- fail2ban
         state: latest
         update_cache: true
 
