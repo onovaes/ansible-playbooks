@@ -1,73 +1,75 @@
-#################################################
-# DO Community Playbooks: Initial Server Setup
-#################################################
 ---
-- hosts: apis
+- hosts: all
   become: true
   vars_files:
     - vars/default.yml
-
+    
   tasks:
-    - name: Instala os pré-requisitos
-      apt: name=aptitude update_cache=yes state=latest force_apt_get=yes
+    - name: Install aptitude, which is preferred by Ansible as an alternative to the apt package manager.
+      apt: 
+        name: aptitude
+        state: latest
+        update_cache: true
 
-# Sudo Group Setup
-    - name: Garante que temos um grupo 'wheel'
-      group:
-        name: wheel
-        state: present
-
-    - name: Usuários do grupo wheel poderá usar sudo sem senha 
+    - name: Setup passwordless sudo
       lineinfile:
         path: /etc/sudoers
         state: present
-        regexp: '^%wheel'
-        line: '%wheel ALL=(ALL) NOPASSWD: ALL'
-        validate: '/usr/sbin/visudo -cf %s'
+        regexp: '^%sudo'
+        line: '%sudo ALL=(ALL) NOPASSWD: ALL'
+        validate: '/usr/sbin/visudo -cf %s'       
 
-# User + Key Setup
-    - name: Cria um usuário com privilégio de root 
+    - name: Create a new regular user with sudo privileges
       user:
-        name: "{{ create_user }}"
+        name: "{{ created_username }}"
         state: present
-        groups: wheel
+        groups: sudo
         append: true
-        create_home: true
-        shell: /bin/bash
+        create_home: true 
 
-    - name: Copia a minha chave publica para o usuário
-      authorized_key:
-        user: "{{ create_user }}"
+    - name: Set authorized key for remote user
+      ansible.posix.authorized_key:
+        user: "{{ created_username }}"
         state: present
-        key: "{{ copy_local_key }}"
+        key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
+        path: /home/onovaes/.ssh/authorized_keys
 
-    - name: Desabilita a autentição no ssh pelo usuário root
+    - name: Disable password authentication for all users
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        state: present
+        regexp: '^#?PasswordAuthentication'
+        line: 'PasswordAuthentication no'
+
+    - name: Disable password authentication for root
       lineinfile:
         path: /etc/ssh/sshd_config
         state: present
         regexp: '^#?PermitRootLogin'
-        line: 'PermitRootLogin without-password'
+        line: 'PermitRootLogin no'
 
     - name: Restart do sshd
       service:
         name: 'sshd'
         state: 'restarted'
 
-# Install Packages
-    - name: Update apt
-      apt: update_cache=yes
+    - name: Update apt and install required system packages
+      apt:
+        pkg:
+          - curl
+          - vim
+          - git
+          - ufw
+          - fail2ban
+        state: latest
+        update_cache: true
 
-    - name: Install required system packages
-      apt: name={{ sys_packages }} state=latest
-
-# UFW Setup
     - name: UFW - Allow SSH connections
-      ufw:
+      community.general.ufw:
         rule: allow
         name: OpenSSH
 
-    - name: UFW - Deny all other incoming traffic by default
-      ufw:
+    - name: UFW - Enable and deny by default
+      community.general.ufw:
         state: enabled
-        policy: deny
-        direction: incoming
+        default: deny

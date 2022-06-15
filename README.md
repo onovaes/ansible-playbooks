@@ -1,38 +1,57 @@
-# Meus Playbooks
+# My Playbooks
 
-Acreditamos que já tenha o ansible instalado na sua maquina.
+A collection of minimalist Ansible playbooks for automating server setups
 
-TODO LIST
-- Tirar inventario do playbook, pois devo passar como parametro no docker
-- validando instlaco do dockers
-- Acredito que não estava fazendo o upgrade inicial automatico
+- [Initial Server Setup for Ubuntu 20.04](https://github.com/onovaes/ansible-playbooks/tree/master/initial_setup_ubuntu2004) *
 
-### Ubuntu setup inicial
 
-[initial_setup_ubuntu2004] - Faz as configurações iniciais no ubuntu. Testado no Ubuntu 20.04 LTS
+*the Initial Server Setup should be your starting point for fresh servers.
 
-- Atualiza os pacotes
-- Desabilita o login em ssh com o usuário root 
-- Cria e Adiciona o meu usuário ao grupo whell (Super Usuário)
-- Adiciona a minha chave publica ssh ao usuário criado no passo anterior
-- Instala alguns pacotes como   'curl', 'vim', 'git', 'ufw','fail2ban'
+Ansible >= 2.11.5 required
 
-## 1 - Clonando o repo e entrando na pasta
+
+### Connection Test
+
+From your local machine or Ansible control node, run:
+
+```command
+# Test with password and login
+ansible all -m ping -u remote_user
+
+# Test with ssk key
+ansible all -m ping \
+-u root \
+--key-file=~/.ssh/id_rsa
+
+```
+
+If you're able to get a "pong" reply back from your node(s), your setup works as expected and you'll be able to run both ad-hoc commands and playbooks on your nodes, using Ansible.
+
+
+### 1 - Clone
     
     $git clone git@github.com:onovaes/ansible-playbooks.git
     cd ansible-playbooks
 
-## 2 - Editar arquivo de configuração 
+### 2 - Conffile 
     
-    $nano initial_setup_ubuntu2004/vars/default.yml
+    $cp initial_setup_ubuntu2004/vars/example-default.yml initial_setup_ubuntu2004/vars/default.yml
 
-## 3 - Executar playbook
-
-Executaremos como root na primeira vez.
-
-    $ansible-playbook -u root initial_setup_ubuntu2004/playbook.yml 
+### 3 - Run Playbook
 
 
-Leituras importantes-
-    https://docs.docker.com/engine/install/linux-postinstall/
+    # RUN as root
+    $ansible-playbook initial_setup_ubuntu2004/playbook.yml -u root 
+
+    # RUN as otheruser with only called "dev" hosts group 
+    $ansible-playbook initial_setup_ubuntu2004/playbook.yml -u otheruser -l dev --check --diff
+
+
+
+## TODO's
+
+
+[] Tirar inventario do playbook, pois devo passar como parametro no docker
+[] validando instlaco do dockers
+[] Acredito que não estava fazendo o upgrade inicial automatico
 
