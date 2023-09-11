@@ -1,32 +1,33 @@
 ---
-- hosts: all
+- name: Initial server setup
+  hosts: all
   become: true
   vars_files:
     - vars/default.yml
-    
+
   tasks:
-    - name: Install aptitude, which is preferred by Ansible as an alternative to the apt package manager.
-      apt: 
+    - name: Install aptitude
+      ansible.builtin.apt:
         name: aptitude
-        state: latest
+        state: present
         update_cache: true
 
     - name: Setup passwordless sudo
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/sudoers
         state: present
         regexp: '^%sudo'
         line: '%sudo ALL=(ALL) NOPASSWD: ALL'
-        validate: '/usr/sbin/visudo -cf %s'       
+        validate: '/usr/sbin/visudo -cf %s'
 
     - name: Create a new regular user with sudo privileges
-      user:
+      ansible.builtin.user:
         name: "{{ created_username }}"
         state: present
         groups: sudo
         shell: /bin/bash
         append: true
-        create_home: true 
+        create_home: true
 
     - name: Set authorized key for remote user
       ansible.posix.authorized_key:
@@ -36,33 +37,33 @@
         path: /home/onovaes/.ssh/authorized_keys
 
     - name: Disable password authentication for all users
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         state: present
         regexp: '^#?PasswordAuthentication'
         line: 'PasswordAuthentication no'
 
     - name: Disable password authentication for root on ssh
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         state: present
         regexp: '^#?PermitRootLogin'
         line: 'PermitRootLogin no'
 
-    - name: Restart do sshd
-      service:
-        name: 'sshd'
-        state: 'restarted'
+    - name: Ssh restart
+      ansible.builtin.service:
+        name: ssh
+        state: restarted
 
     - name: Update apt and install required system packages
-      apt:
+      ansible.builtin.apt:
         pkg:
           - curl
           - vim
           - git
           - ufw
-          #- fail2ban
-        state: latest
+          # - fail2ban
+        state: present
         update_cache: true
 
     - name: UFW - Allow SSH connections
