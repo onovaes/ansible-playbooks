@@ -2,7 +2,7 @@
 
 A collection of minimalist Ansible playbooks for automating server setups
 
-- [Initial Server Setup for Ubuntu 20.04](https://github.com/onovaes/ansible-playbooks/tree/master/initial_setup_ubuntu2004) *
+- [Initial Server Setup for Ubuntu](https://github.com/onovaes/ansible-playbooks/tree/master/initial_setup_ubuntu) *
 
 
 *the Initial Server Setup should be your starting point for fresh servers.
@@ -35,16 +35,16 @@ If you're able to get a "pong" reply back from your node(s), your setup works as
 
 ### 2 - Conffile 
     
-    $cp initial_setup_ubuntu2004/vars/example-default.yml initial_setup_ubuntu2004/vars/default.yml
+    $cp initial_setup_ubuntu/vars/example-default.yml initial_setup_ubuntu/vars/default.yml
 
 ### 3 - Run Playbook
 
 
     # RUN as root
-    $ansible-playbook initial_setup_ubuntu2004/playbook.yml -u root 
+    $ansible-playbook initial_setup_ubuntu/playbook.yml -u root 
 
     # RUN as otheruser with only called "dev" hosts group 
-    $ansible-playbook initial_setup_ubuntu2004/playbook.yml -u otheruser -l dev --check --diff
+    $ansible-playbook initial_setup_ubuntu/playbook.yml -u otheruser -l dev --check --diff
 
 
 
